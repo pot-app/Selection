@@ -12,24 +12,12 @@ pub fn get_text() -> String {
             // check exit code
             if output.status.success() {
                 // get output content
-                let content = match String::from_utf8(output.stdout) {
-                    Ok(content) => content,
+                match String::from_utf8(output.stdout) {
+                    Ok(content) => return content.trim().to_string(),
                     Err(err) => {
                         println!("{}", err);
-                        return String::new();
                     }
                 };
-                // trim content
-                let content = content.trim();
-                return content.to_string();
-            } else {
-                let err = output
-                    .stderr
-                    .into_iter()
-                    .map(|c| c as char)
-                    .collect::<String>()
-                    .into();
-                println!("{}", err);
             }
         }
         Err(err) => println!("{}", err),
