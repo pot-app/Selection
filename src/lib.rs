@@ -17,18 +17,9 @@ use crate::macos::get_text;
 #[cfg(target_os = "windows")]
 use crate::windows::get_text;
 
-pub fn get_selected_text() -> String {
-    get_text()
-}
-
 #[cfg(test)]
 mod tests {
-    #[cfg(target_os = "linux")]
-    use crate::linux::get_text;
-    #[cfg(target_os = "macos")]
-    use crate::macos::get_text;
-    #[cfg(target_os = "windows")]
-    use crate::windows::get_text;
+    use crate::get_text;
     #[test]
     fn it_works() {
         println!("{}", get_text());
