@@ -5,7 +5,7 @@ pub fn get_text() -> String {
     }
     match std::process::Command::new("osascript")
         .arg("-e")
-        .arg(apple_script)
+        .arg(APPLE_SCRIPT)
         .output()
     {
         Ok(output) => {
@@ -35,7 +35,7 @@ fn query_accessibility_permissions() -> bool {
     trusted
 }
 
-const apple_script: &str = r#"
+const APPLE_SCRIPT: &str = r#"
 use AppleScript version "2.4"
 use scripting additions
 use framework "Foundation"
