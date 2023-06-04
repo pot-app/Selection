@@ -11,11 +11,11 @@ mod macos;
 mod windows;
 
 #[cfg(target_os = "linux")]
-use crate::linux::get_text;
+pub use crate::linux::get_text;
 #[cfg(target_os = "macos")]
-use crate::macos::get_text;
+pub use crate::macos::get_text;
 #[cfg(target_os = "windows")]
-use crate::windows::get_text;
+pub use crate::windows::get_text;
 
 #[cfg(test)]
 mod tests {
