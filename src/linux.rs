@@ -23,9 +23,7 @@ pub fn get_text() -> String {
 }
 
 fn get_text_on_x11() -> Result<String, String> {
-    use crate::APP;
     use std::time::Duration;
-    use tauri::Manager;
     use x11_clipboard::Clipboard;
 
     if let Ok(clipboard) = Clipboard::new() {
@@ -57,12 +55,12 @@ fn get_text_on_wayland() -> Result<String, String> {
         if !support {
             std::env::set_var("XDG_SESSION_TYPE", "x11");
             std::env::set_var("GDK_BACKEND", "x11");
-            return get_selection_text_on_x11();
+            return get_text_on_x11();
         }
     } else {
         std::env::set_var("XDG_SESSION_TYPE", "x11");
         std::env::set_var("GDK_BACKEND", "x11");
-        return get_selection_text_on_x11();
+        return get_text_on_x11();
     }
 
     let result = get_contents(ClipboardType::Primary, Seat::Unspecified, MimeType::Text);
