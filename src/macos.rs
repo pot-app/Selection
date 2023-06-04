@@ -16,6 +16,7 @@ pub fn get_text() -> String {
                     Ok(content) => content,
                     Err(err) => {
                         println!("{}", err);
+                        return String::new();
                     }
                 };
                 // trim content

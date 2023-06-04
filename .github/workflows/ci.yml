@@ -45,5 +45,6 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - name: Publish
         run: |
+          cargo fmt
           cargo login --registry crates-io ${{ secrets.CRATES_IO_TOKEN }}
           cargo publish --registry crates-io
