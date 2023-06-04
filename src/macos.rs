@@ -21,7 +21,7 @@ pub fn get_text() -> String {
                 };
                 // trim content
                 let content = content.trim();
-                return Ok(content.to_string());
+                return content.to_string();
             } else {
                 let err = output
                     .stderr
