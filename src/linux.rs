@@ -33,7 +33,7 @@ fn get_text_on_x11() -> Result<String, String> {
             clipboard.getter.atoms.property,
             Duration::from_millis(100),
         ) {
-            let mut result = String::from_utf8_lossy(&primary)
+            let result = String::from_utf8_lossy(&primary)
                 .trim_matches('\u{0}')
                 .trim()
                 .to_string();
