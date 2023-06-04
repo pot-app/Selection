@@ -1,0 +1,29 @@
+name: CI
+on: push
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Rust Stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Check
+        run: |
+          cargo check
+  publish:
+    needs: check
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install Rust Stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Publish
+        run: |
+          cargo login --registry crates-io ${{ secrets.CRATES_IO_TOKEN }}
+          cargo publish --registry crates-io
