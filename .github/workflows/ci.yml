@@ -2,7 +2,7 @@ name: CI
 on: push
 
 jobs:
-  check:
+  check-on-linux:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -12,8 +12,28 @@ jobs:
       - name: Check
         run: |
           cargo check
+  check-on-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Rust Stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Check
+        run: |
+          cargo check
+  check-on-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Rust Stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Check
+        run: |
+          cargo check
   publish:
-    needs: check
+    needs: [check-on-linux, check-on-macos, check-on-windows]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags')
     steps:
