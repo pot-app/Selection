@@ -4,11 +4,22 @@
 // Author: Pylogmon <pylogmon@outlook.com>
 
 #[cfg(target_os = "linux")]
-pub mod linux;
+mod linux;
 #[cfg(target_os = "macos")]
-pub mod macos;
+mod macos;
 #[cfg(target_os = "windows")]
-pub mod windows;
+mod windows;
+
+#[cfg(target_os = "linux")]
+use crate::linux::get_text;
+#[cfg(target_os = "macos")]
+use crate::macos::get_text;
+#[cfg(target_os = "windows")]
+use crate::windows::get_text;
+
+pub fn get_selected_text() -> String {
+    get_text()
+}
 
 #[cfg(test)]
 mod tests {
@@ -18,7 +29,6 @@ mod tests {
     use crate::macos::get_text;
     #[cfg(target_os = "windows")]
     use crate::windows::get_text;
-
     #[test]
     fn it_works() {
         println!("{}", get_text());
