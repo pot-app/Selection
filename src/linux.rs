@@ -4,18 +4,18 @@ pub fn get_text() -> String {
         Ok(session_type) => match session_type.as_str() {
             "x11" => match get_text_on_x11() {
                 Ok(text) => return text,
-                Err(err) => println!("{}", err),
+                Err(err) => eprintln!("{}", err),
             },
             "wayland" => match get_text_on_wayland() {
                 Ok(text) => return text,
-                Err(err) => println!("{}", err),
+                Err(err) => eprintln!("{}", err),
             },
             _ => {
-                println!("Unknown Session Type: {session_type}");
+                eprintln!("Unknown Session Type: {session_type}");
             }
         },
         Err(err) => {
-            println!("{}", err);
+            eprintln!("{}", err);
         }
     }
     // Return Empty String

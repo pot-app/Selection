@@ -6,7 +6,7 @@ pub fn get_text() -> String {
             }
         }
         Err(err) => {
-            println!("{}", err)
+            eprintln!("{}", err)
         }
     }
     // Return Empty String
@@ -14,7 +14,9 @@ pub fn get_text() -> String {
 }
 
 fn get_text_by_clipboard() -> Result<String, String> {
-    if !query_accessibility_permissions() {
+    use macos_accessibility_client::accessibility::application_is_trusted_with_prompt;
+
+    if !application_is_trusted_with_prompt() {
         return Err("Please grant accessibility permissions to this application.".to_string());
     }
     match std::process::Command::new("osascript")
@@ -36,16 +38,6 @@ fn get_text_by_clipboard() -> Result<String, String> {
         }
         Err(err) => Err(err.to_string()),
     }
-}
-
-fn query_accessibility_permissions() -> bool {
-    let trusted = macos_accessibility_client::accessibility::application_is_trusted_with_prompt();
-    if trusted {
-        println!("Application is totally trusted!");
-    } else {
-        println!("Application isn't trusted :(");
-    }
-    trusted
 }
 
 const APPLE_SCRIPT: &str = r#"

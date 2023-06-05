@@ -6,7 +6,7 @@ pub fn get_text() -> String {
             }
         }
         Err(err) => {
-            println!("{}", err)
+            eprintln!("{}", err)
         }
     }
     match get_text_by_clipboard() {
@@ -16,13 +16,14 @@ pub fn get_text() -> String {
             }
         }
         Err(err) => {
-            println!("{}", err)
+            eprintln!("{}", err)
         }
     }
     // Return Empty String
     String::new()
 }
 
+// Available for Edge, Chrome and UWP
 fn get_text_by_automation() -> Result<String, String> {
     use windows::Win32::System::Com::{CoCreateInstance, CoInitialize, CLSCTX_ALL};
     use windows::Win32::UI::Accessibility::{
@@ -74,6 +75,7 @@ fn get_text_by_automation() -> Result<String, String> {
     Ok(target)
 }
 
+// Available for almost all applications
 fn get_text_by_clipboard() -> Result<String, String> {
     use arboard::Clipboard;
 
