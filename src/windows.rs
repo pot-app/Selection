@@ -83,46 +83,48 @@ fn get_text_by_clipboard() -> Result<String, String> {
         Clipboard::new().unwrap().get_image(),
     );
 
-    copy();
+    if copy() {
+        // Read New Clipboard
+        let new_text = Clipboard::new().unwrap().get_text();
 
-    // Read New Clipboard
-    let new_text = Clipboard::new().unwrap().get_text();
+        // Create Write Clipboard
+        let mut write_clipboard = Clipboard::new().unwrap();
 
-    // Create Write Clipboard
-    let mut write_clipboard = Clipboard::new().unwrap();
-
-    match old_clipboard {
-        (Ok(text), _) => {
-            // Old Clipboard is Text
-            write_clipboard.set_text(text).unwrap();
-            if let Ok(new) = new_text {
-                Ok(new)
-            } else {
-                Ok("".to_string())
+        match old_clipboard {
+            (Ok(text), _) => {
+                // Old Clipboard is Text
+                write_clipboard.set_text(text).unwrap();
+                if let Ok(new) = new_text {
+                    Ok(new)
+                } else {
+                    Err("New clipboard is not Text".to_string())
+                }
+            }
+            (_, Ok(image)) => {
+                // Old Clipboard is Image
+                write_clipboard.set_image(image).unwrap();
+                if let Ok(new) = new_text {
+                    Ok(new)
+                } else {
+                    Err("New clipboard is not Text".to_string())
+                }
+            }
+            _ => {
+                // Old Clipboard is Empty
+                write_clipboard.clear().unwrap();
+                if let Ok(new) = new_text {
+                    Ok(new)
+                } else {
+                    Err("New clipboard is not Text".to_string())
+                }
             }
         }
-        (_, Ok(image)) => {
-            // Old Clipboard is Image
-            write_clipboard.set_image(image).unwrap();
-            if let Ok(new) = new_text {
-                Ok(new)
-            } else {
-                Ok("".to_string())
-            }
-        }
-        _ => {
-            // Old Clipboard is Empty
-            write_clipboard.clear().unwrap();
-            if let Ok(new) = new_text {
-                Ok(new)
-            } else {
-                Ok("".to_string())
-            }
-        }
+    } else {
+        Err("Copy Failed".to_string())
     }
 }
 
-fn copy() {
+fn copy() -> bool {
     use windows::Win32::System::DataExchange::GetClipboardSequenceNumber;
     use windows::Win32::System::Threading::{AttachThreadInput, GetCurrentThreadId};
     use windows::Win32::UI::Input::KeyboardAndMouse::GetFocus;
@@ -133,13 +135,13 @@ fn copy() {
     let num_before = unsafe { GetClipboardSequenceNumber() };
 
     unsafe {
-        let window = GetForegroundWindow(); // 获得当前激活的窗口句柄
-        let self_thread_id = GetCurrentThreadId(); // 获取本身的线程ID
-        let fore_thread_id = GetWindowThreadProcessId(window, None); // 根据窗口句柄获取线程ID
-        AttachThreadInput(fore_thread_id, self_thread_id, true); // 附加线程
-        let focused = GetFocus(); // 获取具有输入焦点的窗口句柄
-        AttachThreadInput(fore_thread_id, self_thread_id, false); // 取消附加的线程
-        SendMessageW(focused, WM_COPY, None, None); // 发送复制信号
+        let window = GetForegroundWindow(); // Gets the currently activated window handle
+        let self_thread_id = GetCurrentThreadId(); // Gets the thread ID of itself
+        let fore_thread_id = GetWindowThreadProcessId(window, None); // Get the thread ID from the window handle
+        AttachThreadInput(fore_thread_id, self_thread_id, true); // Attach thread
+        let focused = GetFocus(); // Get the handle of the window with the input focus
+        AttachThreadInput(fore_thread_id, self_thread_id, false); // Cancel attach thread
+        SendMessageW(focused, WM_COPY, None, None); // Send a copy signal
     }
 
     let num_after = unsafe { GetClipboardSequenceNumber() };
@@ -157,5 +159,10 @@ fn copy() {
         enigo.key_up(Key::CapsLock);
         enigo.key_up(Key::C);
         enigo.key_sequence_parse("{+CTRL}c{-CTRL}");
+        std::thread::sleep(std::time::Duration::from_millis(100));
+        let num_enigo = unsafe { GetClipboardSequenceNumber() };
+        num_after != num_enigo
+    } else {
+        true
     }
 }

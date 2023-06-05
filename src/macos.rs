@@ -1,7 +1,21 @@
 pub fn get_text() -> String {
+    match get_text_by_clipboard() {
+        Ok(text) => {
+            if !text.is_empty() {
+                return text;
+            }
+        }
+        Err(err) => {
+            println!("{}", err)
+        }
+    }
+    // Return Empty String
+    String::new()
+}
+
+fn get_text_by_clipboard() -> Result<String, String> {
     if !query_accessibility_permissions() {
-        println!("Please grant accessibility permissions to this application.");
-        return String::new();
+        return Err("Please grant accessibility permissions to this application.".to_string());
     }
     match std::process::Command::new("osascript")
         .arg("-e")
@@ -13,24 +27,23 @@ pub fn get_text() -> String {
             if output.status.success() {
                 // get output content
                 match String::from_utf8(output.stdout) {
-                    Ok(content) => return content.trim().to_string(),
-                    Err(err) => {
-                        println!("{}", err);
-                    }
+                    Ok(content) => Ok(content.trim().to_string()),
+                    Err(err) => Err(err.to_string()),
                 };
+            } else {
+                Err("{:?}", output.status);
             }
         }
-        Err(err) => println!("{}", err),
+        Err(err) => Err(err.to_string()),
     }
-    String::new()
 }
 
 fn query_accessibility_permissions() -> bool {
     let trusted = macos_accessibility_client::accessibility::application_is_trusted_with_prompt();
     if trusted {
-        print!("Application is totally trusted!");
+        println!("Application is totally trusted!");
     } else {
-        print!("Application isn't trusted :(");
+        println!("Application isn't trusted :(");
     }
     trusted
 }
@@ -45,10 +58,6 @@ tell application "System Events"
     set frontmostProcess to first process whose frontmost is true
     set appName to name of frontmostProcess
 end tell
-
-if appName is equal to "pot" then
-    return
-end if
 
 -- Back up clipboard contents:
 set savedClipboard to the clipboard
