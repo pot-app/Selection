@@ -1,3 +1,15 @@
+use arboard::Clipboard;
+use windows::Win32::System::Com::{CoCreateInstance, CoInitialize, CLSCTX_ALL};
+use windows::Win32::System::DataExchange::GetClipboardSequenceNumber;
+use windows::Win32::System::Threading::{AttachThreadInput, GetCurrentThreadId};
+use windows::Win32::UI::Accessibility::{
+    CUIAutomation, IUIAutomation, IUIAutomationTextPattern, UIA_TextPatternId,
+};
+use windows::Win32::UI::Input::KeyboardAndMouse::GetFocus;
+use windows::Win32::UI::WindowsAndMessaging::{
+    GetForegroundWindow, GetWindowThreadProcessId, SendMessageW, WM_COPY,
+};
+
 pub fn get_text() -> String {
     match get_text_by_automation() {
         Ok(text) => {
@@ -25,10 +37,6 @@ pub fn get_text() -> String {
 
 // Available for Edge, Chrome and UWP
 fn get_text_by_automation() -> Result<String, String> {
-    use windows::Win32::System::Com::{CoCreateInstance, CoInitialize, CLSCTX_ALL};
-    use windows::Win32::UI::Accessibility::{
-        CUIAutomation, IUIAutomation, IUIAutomationTextPattern, UIA_TextPatternId,
-    };
     // Init COM
     match unsafe { CoInitialize(None) } {
         Ok(_) => {}
@@ -77,8 +85,6 @@ fn get_text_by_automation() -> Result<String, String> {
 
 // Available for almost all applications
 fn get_text_by_clipboard() -> Result<String, String> {
-    use arboard::Clipboard;
-
     // Read Old Clipboard
     let old_clipboard = (
         Clipboard::new().unwrap().get_text(),
@@ -127,13 +133,6 @@ fn get_text_by_clipboard() -> Result<String, String> {
 }
 
 fn copy() -> bool {
-    use windows::Win32::System::DataExchange::GetClipboardSequenceNumber;
-    use windows::Win32::System::Threading::{AttachThreadInput, GetCurrentThreadId};
-    use windows::Win32::UI::Input::KeyboardAndMouse::GetFocus;
-    use windows::Win32::UI::WindowsAndMessaging::{
-        GetForegroundWindow, GetWindowThreadProcessId, SendMessageW, WM_COPY,
-    };
-
     let num_before = unsafe { GetClipboardSequenceNumber() };
 
     unsafe {

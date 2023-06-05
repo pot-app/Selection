@@ -1,5 +1,11 @@
+use std::env::var;
+use std::io::Read;
+use std::time::Duration;
+use wl_clipboard_rs::paste::{get_contents, ClipboardType, Error, MimeType, Seat};
+use wl_clipboard_rs::utils::is_primary_selection_supported;
+use x11_clipboard::Clipboard;
+
 pub fn get_text() -> String {
-    use std::env::var;
     match var("XDG_SESSION_TYPE") {
         Ok(session_type) => match session_type.as_str() {
             "x11" => match get_text_on_x11() {
@@ -23,9 +29,6 @@ pub fn get_text() -> String {
 }
 
 fn get_text_on_x11() -> Result<String, String> {
-    use std::time::Duration;
-    use x11_clipboard::Clipboard;
-
     if let Ok(clipboard) = Clipboard::new() {
         if let Ok(primary) = clipboard.load(
             clipboard.getter.atoms.primary,
@@ -47,10 +50,6 @@ fn get_text_on_x11() -> Result<String, String> {
 }
 
 fn get_text_on_wayland() -> Result<String, String> {
-    use std::io::Read;
-    use wl_clipboard_rs::paste::{get_contents, ClipboardType, Error, MimeType, Seat};
-    use wl_clipboard_rs::utils::is_primary_selection_supported;
-
     if let Ok(support) = is_primary_selection_supported() {
         if !support {
             std::env::set_var("XDG_SESSION_TYPE", "x11");
