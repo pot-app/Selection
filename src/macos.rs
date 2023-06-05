@@ -33,7 +33,7 @@ fn get_text_by_clipboard() -> Result<String, String> {
                     Err(err) => Err(err.to_string()),
                 };
             } else {
-                Err("{:?}".to_string(), output.status)
+                Err("{output:?}".to_string())
             }
         }
         Err(err) => Err(err.to_string()),
