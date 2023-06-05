@@ -31,7 +31,7 @@ fn get_text_by_clipboard() -> Result<String, String> {
                 match String::from_utf8(output.stdout) {
                     Ok(content) => Ok(content.trim().to_string()),
                     Err(err) => Err(err.to_string()),
-                };
+                }
             } else {
                 Err("{output:?}".to_string())
             }
