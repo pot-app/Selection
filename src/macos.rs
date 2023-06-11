@@ -1,5 +1,3 @@
-use macos_accessibility_client::accessibility::application_is_trusted_with_prompt;
-
 pub fn get_text() -> String {
     match get_text_by_clipboard() {
         Ok(text) => {
@@ -16,9 +14,6 @@ pub fn get_text() -> String {
 }
 
 fn get_text_by_clipboard() -> Result<String, String> {
-    if !application_is_trusted_with_prompt() {
-        return Err("Please grant accessibility permissions to this application.".to_string());
-    }
     match std::process::Command::new("osascript")
         .arg("-e")
         .arg(APPLE_SCRIPT)
