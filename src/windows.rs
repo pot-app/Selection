@@ -80,7 +80,7 @@ fn get_text_by_automation() -> Result<String, String> {
         let str = str.to_string();
         target.push_str(&str);
     }
-    Ok(target)
+    Ok(target.trim().to_string())
 }
 
 // Available for almost all applications
@@ -103,7 +103,7 @@ fn get_text_by_clipboard() -> Result<String, String> {
                 // Old Clipboard is Text
                 write_clipboard.set_text(text).unwrap();
                 if let Ok(new) = new_text {
-                    Ok(new)
+                    Ok(new.trim().to_string())
                 } else {
                     Err("New clipboard is not Text".to_string())
                 }
@@ -112,7 +112,7 @@ fn get_text_by_clipboard() -> Result<String, String> {
                 // Old Clipboard is Image
                 write_clipboard.set_image(image).unwrap();
                 if let Ok(new) = new_text {
-                    Ok(new)
+                    Ok(new.trim().to_string())
                 } else {
                     Err("New clipboard is not Text".to_string())
                 }
@@ -121,7 +121,7 @@ fn get_text_by_clipboard() -> Result<String, String> {
                 // Old Clipboard is Empty
                 write_clipboard.clear().unwrap();
                 if let Ok(new) = new_text {
-                    Ok(new)
+                    Ok(new.trim().to_string())
                 } else {
                     Err("New clipboard is not Text".to_string())
                 }
