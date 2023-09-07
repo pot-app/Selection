@@ -5,7 +5,7 @@ description = "Get the text selected by the cursor"
 repository = "https://github.com/pot-app/Selection"
 keywords = ["selection", "linux", "windows", "macos"]
 categories = ["gui"]
-license = "GPL3"
+license = "GPL-3.0-only"
 version = "0.1.0"
 edition = "2021"
 
