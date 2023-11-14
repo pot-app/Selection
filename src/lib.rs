@@ -16,10 +16,10 @@ mod windows;
 /// # Example
 ///
 /// ```
-/// use selection::linux::get_text;
+/// use selection::get_text;
+///
 /// let text = get_text();
 /// println!("{}", text);
-///
 /// ```
 #[cfg(target_os = "linux")]
 pub use crate::linux::get_text;
