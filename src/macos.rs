@@ -1,3 +1,6 @@
+use log::{error, info};
+use std::error::Error;
+
 pub fn get_text() -> String {
     match get_text_by_clipboard() {
         Ok(text) => {
@@ -6,32 +9,25 @@ pub fn get_text() -> String {
             }
         }
         Err(err) => {
-            eprintln!("{}", err)
+            error!("{}", err)
         }
     }
     // Return Empty String
     String::new()
 }
 
-fn get_text_by_clipboard() -> Result<String, String> {
-    match std::process::Command::new("osascript")
+fn get_text_by_clipboard() -> Result<String, Box<dyn Error>> {
+    let output = std::process::Command::new("osascript")
         .arg("-e")
         .arg(APPLE_SCRIPT)
-        .output()
-    {
-        Ok(output) => {
-            // check exit code
-            if output.status.success() {
-                // get output content
-                match String::from_utf8(output.stdout) {
-                    Ok(content) => Ok(content.trim().to_string()),
-                    Err(err) => Err(err.to_string()),
-                }
-            } else {
-                Err("{output:?}".to_string())
-            }
-        }
-        Err(err) => Err(err.to_string()),
+        .output()?;
+    // check exit code
+    if output.status.success() {
+        // get output content
+        let content = String::from_utf8(output.stdout)?;
+        Ok(content)
+    } else {
+        Err(format!("{output:?}").into())
     }
 }
 
