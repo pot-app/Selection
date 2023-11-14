@@ -5,7 +5,7 @@ Get the text selected by the cursor
 ## Example
 
 ```toml
-selection = {git = "https://github.com/pot-app/Selection"}
+selection = "1.1.0"
 ```
 
 ```rust

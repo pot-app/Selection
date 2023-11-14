@@ -10,6 +10,17 @@ mod macos;
 #[cfg(target_os = "windows")]
 mod windows;
 
+/// Get the text selected by the cursor
+///
+/// Return empty string if no text is selected or error occurred
+/// # Example
+///
+/// ```
+/// use selection::linux::get_text;
+/// let text = get_text();
+/// println!("{}", text);
+///
+/// ```
 #[cfg(target_os = "linux")]
 pub use crate::linux::get_text;
 #[cfg(target_os = "macos")]
