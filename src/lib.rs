@@ -10,6 +10,13 @@ mod macos;
 #[cfg(target_os = "windows")]
 mod windows;
 
+#[cfg(target_os = "linux")]
+use crate::linux::get_text as _get_text;
+#[cfg(target_os = "macos")]
+use crate::macos::get_text as _get_text;
+#[cfg(target_os = "windows")]
+use crate::windows::get_text as _get_text;
+
 /// Get the text selected by the cursor
 ///
 /// Return empty string if no text is selected or error occurred
@@ -21,12 +28,9 @@ mod windows;
 /// let text = get_text();
 /// println!("{}", text);
 /// ```
-#[cfg(target_os = "linux")]
-pub use crate::linux::get_text;
-#[cfg(target_os = "macos")]
-pub use crate::macos::get_text;
-#[cfg(target_os = "windows")]
-pub use crate::windows::get_text;
+pub fn get_text() -> String {
+    _get_text().trim().to_owned()
+}
 
 #[cfg(test)]
 mod tests {
