@@ -1,6 +1,6 @@
 use arboard::Clipboard;
-use enigo::{Direction, Enigo, Key, Keyboard, Settings};
 use log::{error, info};
+use rdev::{simulate, EventType, Key};
 use std::error::Error;
 use windows::Win32::System::Com::{CoCreateInstance, CoInitialize, CLSCTX_ALL};
 use windows::Win32::System::DataExchange::GetClipboardSequenceNumber;
@@ -109,19 +109,21 @@ fn get_text_by_clipboard() -> Result<String, Box<dyn Error>> {
 
 fn copy() -> Result<bool, Box<dyn Error>> {
     let num_before = unsafe { GetClipboardSequenceNumber() };
-    let mut enigo = Enigo::new(&Settings::default()).unwrap();
-    enigo.key(Key::Control, Direction::Release)?;
-    enigo.key(Key::Alt, Direction::Release)?;
-    enigo.key(Key::Shift, Direction::Release)?;
-    enigo.key(Key::Meta, Direction::Release)?;
-    enigo.key(Key::Tab, Direction::Release)?;
-    enigo.key(Key::Escape, Direction::Release)?;
-    enigo.key(Key::CapsLock, Direction::Release)?;
-    enigo.key(Key::C, Direction::Release)?;
-    enigo.key(Key::Control, Direction::Press)?;
-    enigo.key(Key::C, Direction::Click)?;
-    enigo.key(Key::Control, Direction::Release)?;
-    std::thread::sleep(std::time::Duration::from_millis(20));
+    simulate(&EventType::KeyRelease(Key::ControlLeft))?;
+    simulate(&EventType::KeyRelease(Key::ControlRight))?;
+    simulate(&EventType::KeyRelease(Key::Alt))?;
+    simulate(&EventType::KeyRelease(Key::ShiftLeft))?;
+    simulate(&EventType::KeyRelease(Key::ShiftRight))?;
+    simulate(&EventType::KeyRelease(Key::MetaLeft))?;
+    simulate(&EventType::KeyRelease(Key::Tab))?;
+    simulate(&EventType::KeyRelease(Key::Escape))?;
+    simulate(&EventType::KeyRelease(Key::CapsLock))?;
+    simulate(&EventType::KeyRelease(Key::KeyC))?;
+    simulate(&EventType::KeyPress(Key::ControlRight))?;
+    simulate(&EventType::KeyPress(Key::KeyC))?;
+    simulate(&EventType::KeyRelease(Key::ControlRight))?;
+    simulate(&EventType::KeyRelease(Key::KeyC))?;
+    std::thread::sleep(std::time::Duration::from_millis(15));
     let num_after = unsafe { GetClipboardSequenceNumber() };
     Ok(num_after != num_before)
 }
