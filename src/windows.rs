@@ -1,4 +1,5 @@
 use arboard::Clipboard;
+use enigo::{Direction, Enigo, Key, Keyboard, Settings};
 use log::{error, info};
 use std::error::Error;
 use windows::Win32::System::Com::{CoCreateInstance, CoInitialize, CLSCTX_ALL};
@@ -65,7 +66,7 @@ fn get_text_by_clipboard() -> Result<String, Box<dyn Error>> {
     // Read Old Clipboard
     let old_clipboard = (Clipboard::new()?.get_text(), Clipboard::new()?.get_image());
 
-    if copy() {
+    if let Ok(true) = copy() {
         // Read New Clipboard
         let new_text = Clipboard::new()?.get_text();
 
@@ -106,22 +107,21 @@ fn get_text_by_clipboard() -> Result<String, Box<dyn Error>> {
     }
 }
 
-fn copy() -> bool {
-    use enigo::*;
+fn copy() -> Result<bool, Box<dyn Error>> {
     let num_before = unsafe { GetClipboardSequenceNumber() };
-
-    let mut enigo = Enigo::new();
-    enigo.key_up(Key::Control);
-    enigo.key_up(Key::Alt);
-    enigo.key_up(Key::Shift);
-    enigo.key_up(Key::Space);
-    enigo.key_up(Key::Meta);
-    enigo.key_up(Key::Tab);
-    enigo.key_up(Key::Escape);
-    enigo.key_up(Key::CapsLock);
-    enigo.key_up(Key::C);
-    enigo.key_sequence_parse("{+CTRL}c{-CTRL}");
-    std::thread::sleep(std::time::Duration::from_millis(100));
+    let mut enigo = Enigo::new(&Settings::default()).unwrap();
+    enigo.key(Key::Control, Direction::Release)?;
+    enigo.key(Key::Alt, Direction::Release)?;
+    enigo.key(Key::Shift, Direction::Release)?;
+    enigo.key(Key::Meta, Direction::Release)?;
+    enigo.key(Key::Tab, Direction::Release)?;
+    enigo.key(Key::Escape, Direction::Release)?;
+    enigo.key(Key::CapsLock, Direction::Release)?;
+    enigo.key(Key::C, Direction::Release)?;
+    enigo.key(Key::Control, Direction::Press)?;
+    enigo.key(Key::C, Direction::Click)?;
+    enigo.key(Key::Control, Direction::Release)?;
+    std::thread::sleep(std::time::Duration::from_millis(20));
     let num_after = unsafe { GetClipboardSequenceNumber() };
-    num_after != num_before
+    Ok(num_after != num_before)
 }
