@@ -109,15 +109,8 @@ fn get_text_by_clipboard() -> Result<String, Box<dyn Error>> {
 
 fn copy() -> Result<bool, Box<dyn Error>> {
     let num_before = unsafe { GetClipboardSequenceNumber() };
-    simulate(&EventType::KeyRelease(Key::ControlLeft))?;
-    simulate(&EventType::KeyRelease(Key::ControlRight))?;
     simulate(&EventType::KeyRelease(Key::Alt))?;
-    simulate(&EventType::KeyRelease(Key::ShiftLeft))?;
-    simulate(&EventType::KeyRelease(Key::ShiftRight))?;
-    simulate(&EventType::KeyRelease(Key::MetaLeft))?;
-    simulate(&EventType::KeyRelease(Key::Tab))?;
-    simulate(&EventType::KeyRelease(Key::Escape))?;
-    simulate(&EventType::KeyRelease(Key::CapsLock))?;
+    simulate(&EventType::KeyRelease(Key::KeyX))?;
     simulate(&EventType::KeyRelease(Key::KeyC))?;
     simulate(&EventType::KeyPress(Key::ControlRight))?;
     simulate(&EventType::KeyPress(Key::KeyC))?;
