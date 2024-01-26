@@ -1,8 +1,8 @@
 [package]
 name = "selection"
-authors = ["Pylogmon"]
+authors = ["Borber"]
 description = "Get the text selected by the cursor"
-repository = "https://github.com/pot-app/Selection"
+repository = "https://github.com/Borber/selection"
 keywords = ["selection", "linux", "windows", "macos"]
 categories = ["gui"]
 license = "GPL-3.0-only"
