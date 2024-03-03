@@ -1,8 +1,8 @@
 [package]
 name = "selection"
-authors = ["Pylogmon"]
+authors = ["Borber"]
 description = "Get the text selected by the cursor"
-repository = "https://github.com/pot-app/Selection"
+repository = "https://github.com/Borber/selection"
 keywords = ["selection", "linux", "windows", "macos"]
 categories = ["gui"]
 license = "GPL-3.0-only"
@@ -12,13 +12,21 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-log = "0.4.20"
+log = "0.4"
 
 [target.'cfg(windows)'.dependencies]
-windows = {version="0.52.0",features= ["Win32_UI_WindowsAndMessaging", "Win32_Foundation","Win32_System_Threading","Win32_UI_Input_KeyboardAndMouse","Win32_System_DataExchange","Win32_UI_Accessibility","Win32_System_Com"] }
-enigo = "0.1.3"
-arboard = "3.2.0"
+windows = { version = "0.54", features = [
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_Foundation",
+    "Win32_System_Threading",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_System_DataExchange",
+    "Win32_UI_Accessibility",
+    "Win32_System_Com",
+] }
+rdev = { git = "https://github.com/fufesou/rdev.git" }
+arboard = "3.3"
 
 [target.'cfg(target_os = "linux")'.dependencies]
-x11-clipboard = "0.8.1"
-wl-clipboard-rs = "0.8.0"
+x11-clipboard = "0.9"
+wl-clipboard-rs = "0.8"
