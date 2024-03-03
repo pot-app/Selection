@@ -12,10 +12,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-log = "0.4.20"
+log = "0.4"
 
 [target.'cfg(windows)'.dependencies]
-windows = { version = "0.52.0", features = [
+windows = { version = "0.54", features = [
     "Win32_UI_WindowsAndMessaging",
     "Win32_Foundation",
     "Win32_System_Threading",
@@ -25,8 +25,8 @@ windows = { version = "0.52.0", features = [
     "Win32_System_Com",
 ] }
 rdev = { git = "https://github.com/fufesou/rdev.git" }
-arboard = "3.3.0"
+arboard = "3.3"
 
 [target.'cfg(target_os = "linux")'.dependencies]
-x11-clipboard = "0.8.1"
-wl-clipboard-rs = "0.8.0"
+x11-clipboard = "0.9"
+wl-clipboard-rs = "0.8"
