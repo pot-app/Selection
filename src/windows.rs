@@ -25,9 +25,8 @@ pub fn get_text() -> String {
         Ok(text) => {
             if !text.is_empty() {
                 return text;
-            } else {
-                info!("get_text_by_clipboard is empty");
             }
+            info!("get_text_by_clipboard is empty");
         }
         Err(err) => {
             error!("get_text_by_automation error:{}", err);
