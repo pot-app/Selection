@@ -107,20 +107,25 @@ fn get_text_by_clipboard() -> Result<String, Box<dyn Error>> {
 }
 
 fn copy() -> bool {
-    use enigo::*;
+    use enigo::{
+        Direction::{Click, Press, Release},
+        Enigo, Key, Keyboard, Settings,
+    };
     let num_before = unsafe { GetClipboardSequenceNumber() };
 
-    let mut enigo = Enigo::new();
-    enigo.key_up(Key::Control);
-    enigo.key_up(Key::Alt);
-    enigo.key_up(Key::Shift);
-    enigo.key_up(Key::Space);
-    enigo.key_up(Key::Meta);
-    enigo.key_up(Key::Tab);
-    enigo.key_up(Key::Escape);
-    enigo.key_up(Key::CapsLock);
-    enigo.key_up(Key::C);
-    enigo.key_sequence_parse("{+CTRL}c{-CTRL}");
+    let mut enigo = Enigo::new(&Settings::default()).unwrap();
+    enigo.key(Key::Control, Release).unwrap();
+    enigo.key(Key::Alt, Release).unwrap();
+    enigo.key(Key::Shift, Release).unwrap();
+    enigo.key(Key::Space, Release).unwrap();
+    enigo.key(Key::Meta, Release).unwrap();
+    enigo.key(Key::Tab, Release).unwrap();
+    enigo.key(Key::Escape, Release).unwrap();
+    enigo.key(Key::CapsLock, Release).unwrap();
+    enigo.key(Key::C, Release).unwrap();
+    enigo.key(Key::Control, Press).unwrap();
+    enigo.key(Key::C, Click).unwrap();
+    enigo.key(Key::Control, Release).unwrap();
     std::thread::sleep(std::time::Duration::from_millis(100));
     let num_after = unsafe { GetClipboardSequenceNumber() };
     num_after != num_before
