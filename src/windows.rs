@@ -39,7 +39,7 @@ pub fn get_text() -> String {
 // Available for Edge, Chrome and UWP
 fn get_text_by_automation() -> Result<String, Box<dyn Error>> {
     // Init COM
-    unsafe { CoInitialize(None) }?;
+    let _ = unsafe { CoInitialize(None) };
     // Create IUIAutomation instance
     let auto: IUIAutomation = unsafe { CoCreateInstance(&CUIAutomation, None, CLSCTX_ALL) }?;
     // Get Focused Element

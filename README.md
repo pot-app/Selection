@@ -5,7 +5,7 @@ Get the text selected by the cursor
 ## Example
 
 ```toml
-selection = "1.1.0"
+selection = "1.2.0"
 ```
 
 ```rust
@@ -36,6 +36,7 @@ fn main() {
 
 ### MacOS
 
+- Accessibility API
 - Clipboard
 
 ### Linux
